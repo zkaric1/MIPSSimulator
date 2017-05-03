@@ -9,6 +9,8 @@ public class R_TypeInstruction extends Instruction {
 	private Boolean shift[];
 	private Boolean funct[];
 	
+	public R_TypeInstruction() { }
+	
 	public R_TypeInstruction(String instructionCode) {
 		super(instructionCode);
 		
@@ -52,11 +54,4 @@ public class R_TypeInstruction extends Instruction {
 	public int getShiftInt() { return getIntFromBin(shift); }
 	public int getFunctInt() { return getIntFromBin(funct); }
 	
-	private int getIntFromBin(Boolean[] arr) {
-		int n = 0, l = arr.length;
-		for (int i = 0; i < l; ++i) {
-		    n = (n << 1) + (arr[i] ? 1 : 0);
-		}
-		return n;
-	}
 }

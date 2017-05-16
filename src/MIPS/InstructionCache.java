@@ -19,4 +19,6 @@ public class InstructionCache {
 	public String getInstruction(int adress) {
 		return instructions[adress]; //adress/4 ako se uzimaju adrese kao 0,4,8...
 	}
+	
+	public Integer getNumberOfInstructions() { return instructions.length; }
 }

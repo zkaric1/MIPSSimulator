@@ -71,10 +71,12 @@ public class Instruction {
 	public Boolean[] getRt() { return rt; }
 	public Boolean[] getRd() { return rd; }
 	public Boolean[] getFunct() { return funct; }
+	public Boolean[] getImm() { return imm; }
 	
 	public int getOpcodeInt() { return getIntFromBin(opcode); }
 	public int getRsInt() { return getIntFromBin(rs); }
 	public int getRtInt() { return getIntFromBin(rt); }
 	public int getRdInt() { return getIntFromBin(rd); }
 	public int getFunctInt() { return getIntFromBin(funct); }
+	public int getImmInt() { return getIntFromBin(imm); }
 }

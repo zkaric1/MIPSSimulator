@@ -1,5 +1,6 @@
 package MIPS;
 
+import MIPSSimulatorBackend.Instruction;
 
 public class InstructionCache {
 	private String instructions[];
@@ -14,6 +15,12 @@ public class InstructionCache {
 	
 	public void fillInstructions(String instructions[]) {
 		this.instructions = instructions;
+	}
+	
+	public void setInstruction(int adress, String instruction) throws IllegalArgumentException {
+		if(adress < 0 || adress >= instructions.length)
+			throw new IllegalArgumentException("Adress out of scope");
+		instructions[adress] = instruction;
 	}
 	
 	public String getInstruction(int adress) {

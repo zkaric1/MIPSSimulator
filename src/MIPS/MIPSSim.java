@@ -9,6 +9,8 @@ public class MIPSSim {
 	//ADD SUB AND 000000
 	
 	
+	private Pipeline pipeline;
+	
 	private InstructionCache instructions;
 	private DataCache data;
 	private int PC;
@@ -22,50 +24,62 @@ public class MIPSSim {
 		setRegisters(new Registers());
 		this.instructions = instructions;
 		this.data = data;
+		this.pipeline = new Pipeline();
 	}
 	
 	public void start() {
 		for(int i = 0; i < instructions.getNumberOfInstructions(); i++) {
-			fetch(i);
+			if(pipeline.isFull()) {
+				i--;
+			} else {
+				fetch(i);
+			}
+			if(!pipeline.getDecode().getIsEmpty() && !pipeline.getDecode().getIsOnHalt())
+				decode();
+			if(!pipeline.getExecute().getIsEmpty() && !pipeline.getExecute().getIsOnHalt())
+				execute();
+			if(!pipeline.getMemory().getIsEmpty() && !pipeline.getMemory().getIsOnHalt())
+				memory();
+			if(!pipeline.getWriteback().getIsEmpty() && !pipeline.getWriteback().getIsOnHalt())
+				writeBack();
+			pipeline.proceed();
 		}
 	}
 	
 	private void fetch(Integer adress) {
-		Instruction inst = new Instruction(instructions.getInstruction(adress));
-		decode(inst);
+		pipeline.setFetch(new InstructionWrapper(instructions.getInstruction(adress)));
 	}
 	
-	private void decode(Instruction instruction) {
-		instruction.decodeInstruction();
-		A = getRegisters().read(instruction.getRsInt());
-		B = getRegisters().read(instruction.getRtInt());
-		Imm = instruction.getImmInt();
-		execute(instruction);
+	private void decode() {
+		pipeline.getDecode().getInstruction().decodeInstruction();
+
+		A = getRegisters().read(pipeline.getDecode().getInstruction().getRsInt());
+		B = getRegisters().read(pipeline.getDecode().getInstruction().getRtInt());
+		Imm = pipeline.getDecode().getInstruction().getImmInt();
 	}
 	
-	private void execute(Instruction instruction) {
-		if(instruction.getOpcodeInt() == 0) {
-			alu.calculate(A, B, instruction.getFunctInt());
+	private void execute() {
+		if(pipeline.getExecute().getInstruction().getOpcodeInt() == 0) {
+			alu.calculate(A, B, pipeline.getExecute().getInstruction().getFunctInt());
 		} else {
 			alu.calculate(A, Imm, 32);
 		}
-		memory(instruction);
+		
 	}
 	
-	private void memory(Instruction instruction) {
-		if(instruction.getOpcodeInt() == 43) {
+	private void memory() {
+		if(pipeline.getMemory().getInstruction().getOpcodeInt() == 43) {
 			data.write(alu.getOutput(), B);
-		} else if(instruction.getOpcodeInt() == 35) {
+		} else if(pipeline.getMemory().getInstruction().getOpcodeInt() == 35) {
 			LDM = data.read(alu.getOutput());
 		}
-		writeBack(instruction);
 	}
 	
-	private void writeBack(Instruction instruction) {
-		if(instruction.getOpcodeInt() == 35) {
-			getRegisters().write(instruction.getRtInt(), LDM);
-		} else if(instruction.getOpcodeInt() == 0) {
-			getRegisters().write(instruction.getRdInt(), alu.getOutput());
+	private void writeBack() {
+		if(pipeline.getWriteback().getInstruction().getOpcodeInt() == 35) {
+			getRegisters().write(pipeline.getWriteback().getInstruction().getRtInt(), LDM);
+		} else if(pipeline.getWriteback().getInstruction().getOpcodeInt() == 0) {
+			getRegisters().write(pipeline.getWriteback().getInstruction().getRdInt(), alu.getOutput());
 		}
 	}
 

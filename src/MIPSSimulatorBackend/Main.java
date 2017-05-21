@@ -19,10 +19,7 @@ public class Main {
 		instCache.setInstruction(0, "00000000010000110000100000100000"); //add
 		instCache.setInstruction(1, "10101100000000010000000000000000"); //sw
 		instCache.setInstruction(2, "10001100000001010000000000000000"); //lw
-		instCache.setInstruction(3, "00000000101000110100100000100100"); //sub
-		
-		
-		
+		instCache.setInstruction(3, "00000000101000110100000000100010"); //sub
 		
 		DataCache dataCache = new DataCache(64);
 		

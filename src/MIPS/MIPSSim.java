@@ -44,6 +44,18 @@ public class MIPSSim {
 				writeBack();
 			pipeline.proceed();
 		}
+		
+		while(!pipeline.isEmpty()) {
+			if(!pipeline.getDecode().getIsEmpty() && !pipeline.getDecode().getIsOnHalt())
+				decode();
+			if(!pipeline.getExecute().getIsEmpty() && !pipeline.getExecute().getIsOnHalt())
+				execute();
+			if(!pipeline.getMemory().getIsEmpty() && !pipeline.getMemory().getIsOnHalt())
+				memory();
+			if(!pipeline.getWriteback().getIsEmpty() && !pipeline.getWriteback().getIsOnHalt())
+				writeBack();
+			pipeline.proceed();
+		}
 	}
 	
 	private void fetch(Integer adress) {

@@ -35,28 +35,29 @@ public class Pipeline {
 		//ako se ne ceka instrukcija u writeback
 		if(waiting != 5) {
 			writeback = memory;
-			memory.setIsEmpty(true);
+			memory = new InstructionWrapper();
+			
 		} else {
 			return;
 		}
 		
 		if(waiting != 4) {
 			memory = execute;
-			execute.setIsEmpty(true);
+			execute = new InstructionWrapper();
 		} else {
 			return;
 		}
 		
 		if(waiting != 3) {
 			execute = decode;
-			decode.setIsEmpty(true);
+			decode = new InstructionWrapper();
 		} else {
 			return;
 		}
 		
 		if(waiting != 2) {
 			decode = fetch;
-			fetch.setIsEmpty(true);
+			fetch = new InstructionWrapper();
 		} else {
 			return;
 		}
@@ -69,6 +70,10 @@ public class Pipeline {
 		return !fetch.getIsEmpty();
 	}
 
+	public Boolean isEmpty() {
+		return fetch.getIsEmpty() && decode.getIsEmpty() && execute.getIsEmpty() && memory.getIsEmpty() && writeback.getIsEmpty();
+	}
+	
 	public InstructionWrapper getFetch() {
 		return fetch;
 	}

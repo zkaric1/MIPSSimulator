@@ -77,6 +77,12 @@ public class MIPSSim {
 		this.registers = registers;
 	}
 	
-	
+	public DataCache getData() {
+		return data;
+	}
+
+	public void setData(DataCache data) {
+		this.data = data;
+	}
 	
 }

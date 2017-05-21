@@ -18,7 +18,7 @@ public class InstructionCache {
 	}
 	
 	public void setInstruction(int adress, String instruction) throws IllegalArgumentException {
-		if(adress < 0 || adress >= instructions.length)
+		if(adress < 0 || adress >= instructions.length || instruction.length() != 32)
 			throw new IllegalArgumentException("Adress out of scope");
 		instructions[adress] = instruction;
 	}
